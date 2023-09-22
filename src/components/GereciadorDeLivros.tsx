@@ -28,6 +28,13 @@ const GerenciadorDeLivros: React.FC = () => {
     setLivros(livrosArmazenados);
   }, []);
 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setLivro((prevLivro) => ({ ...prevLivro, [name]: value }));
+  };
+
 };
 
 export default GerenciadorDeLivros;
