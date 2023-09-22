@@ -133,6 +133,33 @@ const GerenciadorDeLivros: React.FC = () => {
       fecharModalExclusao();
     }
   };
+
+  return (
+    <div>
+      <h2>Gerenciador de Livros</h2>
+      <LivroForm livro={livro} onChange={handleChange} onSubmit={handleSubmit} />
+      {livros.length > 0 && (
+        <ListaLivros
+          livros={livros}
+          onEdit={abrirModalEdicao}
+          onDelete={confirmarExclusao}
+        />
+      )}
+      <EditarLivroModal
+        isOpen={modalIsOpen}
+        onClose={fecharModalEdicao}
+        livroEmEdicao={livroEmEdicao}
+        onEditChange={handleChange}
+        onEditSubmit={handleEdit}
+      />
+      <ExcluirLivroModal
+        isOpen={modalExclusaoIsOpen}
+        onClose={fecharModalExclusao}
+        livroParaExcluir={livroParaExcluir}
+        onExcluirConfirm={handleExcluir}
+      />
+    </div>
+  );
 };
 
 export default GerenciadorDeLivros;
