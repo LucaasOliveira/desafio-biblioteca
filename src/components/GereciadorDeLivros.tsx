@@ -84,6 +84,29 @@ const GerenciadorDeLivros: React.FC = () => {
     limparFormulario();
   };
 
+  const abrirModalExclusao = () => {
+    setModalExclusaoIsOpen(true);
+  };
+
+  const fecharModalExclusao = () => {
+    setModalExclusaoIsOpen(false);
+    setLivroParaExcluir(null);
+  };
+
+  const abrirModalEdicao = (livroItem: Livro | null) => {
+    if (livroItem) {
+      setLivroEmEdicao(livroItem);
+    } else {
+      setLivroEmEdicao(null);
+    }
+    setModalIsOpen(true);
+  };
+
+  const fecharModalEdicao = () => {
+    setModalIsOpen(false);
+    setLivroEmEdicao(null);
+  };
+
 };
 
 export default GerenciadorDeLivros;
