@@ -107,6 +107,32 @@ const GerenciadorDeLivros: React.FC = () => {
     setLivroEmEdicao(null);
   };
 
+  const limparFormulario = () => {
+    setLivro({
+      id: uuidv4(),
+      titulo: '',
+      autor: '',
+      anoPublicacao: 0,
+      dataCadastro: new Date().toLocaleDateString(),
+      genero: '',
+      descricao: '',
+    });
+  };
+
+  const confirmarExclusao = (livroItem: Livro) => {
+    setLivroParaExcluir(livroItem);
+    abrirModalExclusao();
+  };
+
+  const handleExcluir = () => {
+    if (livroParaExcluir) {
+      const livrosAtualizados = livros.filter(
+        (livroItem) => livroItem.id !== livroParaExcluir.id
+      );
+      salvarELimparFormulario(livrosAtualizados);
+      fecharModalExclusao();
+    }
+  };
 };
 
 export default GerenciadorDeLivros;
