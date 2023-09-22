@@ -48,6 +48,36 @@ const GerenciadorDeLivros: React.FC = () => {
     salvarELimparFormulario(livrosAtualizados);
   };
 
+  const handleEdit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (livroEmEdicao) {
+      const anoAtual = new Date().getFullYear();
+      const anoPublicacao = livroEmEdicao.anoPublicacao;
+      const anoCadastro = parseInt(
+        livroEmEdicao.dataCadastro.split('/')[2],
+        10
+      );
+
+      if (anoPublicacao > anoAtual) {
+        alert('O ano de publicação não pode ser no futuro.');
+        return;
+      }
+
+      if (anoPublicacao > anoCadastro) {
+        alert('O ano de publicação não pode ser maior que o ano de cadastro.');
+        return;
+      }
+    }
+
+    const livrosAtualizados = livros.map((livroItem) =>
+      livroItem.id === livroEmEdicao?.id ? livroEmEdicao : livroItem
+    );
+
+    salvarELimparFormulario(livrosAtualizados);
+    fecharModalEdicao();
+  };
+
 };
 
 export default GerenciadorDeLivros;
