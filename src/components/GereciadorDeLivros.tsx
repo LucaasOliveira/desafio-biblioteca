@@ -78,6 +78,12 @@ const GerenciadorDeLivros: React.FC = () => {
     fecharModalEdicao();
   };
 
+  const salvarELimparFormulario = (livrosAtualizados: Livro[]) => {
+    setLivros(livrosAtualizados);
+    localStorage.setItem('livros', JSON.stringify(livrosAtualizados));
+    limparFormulario();
+  };
+
 };
 
 export default GerenciadorDeLivros;
