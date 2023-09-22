@@ -1,5 +1,5 @@
 import React from "react";
-import { ListaLivrosProps } from "../types/ListaLivrosProps";
+import { ListaLivrosProps } from "../../types/ListaLivrosProps";
 
 const ListaLivros: React.FC<ListaLivrosProps> = ({
   livros,

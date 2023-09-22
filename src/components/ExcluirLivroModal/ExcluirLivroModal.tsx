@@ -1,7 +1,7 @@
 // Importa as dependências necessárias para o componente
 import React from "react";
 import Modal from "react-modal";
-import { ExcluirLivroModalProps } from "../types/ExcluirLivroModalProps";
+import { ExcluirLivroModalProps } from "../../types/ExcluirLivroModalProps";
 
 const ExcluirLivroModal: React.FC<ExcluirLivroModalProps> = ({
   isOpen,

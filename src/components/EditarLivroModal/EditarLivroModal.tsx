@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "react-modal";
-import LivroFormEdicao from "./LivroFormEdicao";
-import { EditarLivroModalProps } from "../types/EditarLivroModalProps";
+import LivroFormEdicao from "../LivroFormEdicao/LivroFormEdicao";
+import { EditarLivroModalProps } from "../../types/EditarLivroModalProps";
 
 const EditarLivroModal: React.FC<EditarLivroModalProps> = ({
   isOpen,

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import LivroForm from './LivroForm';
-import ListaLivros from './ListaLivros';
-import EditarLivroModal from './EditarLivroModal';
-import ExcluirLivroModal from './ExcluirLivroModal';
-import { Livro } from '../types/Livro';
+import LivroForm from '../LivroForm/LivroForm';
+import ListaLivros from '../ListaLivros/ListaLivros';
+import EditarLivroModal from '../EditarLivroModal/EditarLivroModal';
+import ExcluirLivroModal from '../ExcluirLivroModal/ExcluirLivroModal';
+import { Livro } from '../../types/Livro';
+import { StyledGerenciadorDeLivros } from './styled';
 
 const GerenciadorDeLivros: React.FC = () => {
   const [livro, setLivro] = useState<Livro>({
@@ -135,7 +136,7 @@ const GerenciadorDeLivros: React.FC = () => {
   };
 
   return (
-    <div>
+    <StyledGerenciadorDeLivros>
       <h2>Gerenciador de Livros</h2>
       <LivroForm livro={livro} onChange={handleChange} onSubmit={handleSubmit} />
       {livros.length > 0 && (
@@ -158,7 +159,7 @@ const GerenciadorDeLivros: React.FC = () => {
         livroParaExcluir={livroParaExcluir}
         onExcluirConfirm={handleExcluir}
       />
-    </div>
+    </StyledGerenciadorDeLivros>
   );
 };
 

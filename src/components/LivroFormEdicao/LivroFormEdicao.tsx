@@ -1,5 +1,5 @@
 import React from "react";
-import { LivroFormProps } from "../types/LivroFormProps";
+import { LivroFormProps } from "../../types/LivroFormProps";
 
 const LivroFormEdicao: React.FC<LivroFormProps> = ({
   livro,
