@@ -35,6 +35,19 @@ const GerenciadorDeLivros: React.FC = () => {
     setLivro((prevLivro) => ({ ...prevLivro, [name]: value }));
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const anoAtual = new Date().getFullYear();
+    
+    if (livro.anoPublicacao > anoAtual) {
+      alert('O ano de publicação não pode ser no futuro.');
+      return;
+    }
+    
+    const livrosAtualizados = [...livros, livro];
+    salvarELimparFormulario(livrosAtualizados);
+  };
+
 };
 
 export default GerenciadorDeLivros;
