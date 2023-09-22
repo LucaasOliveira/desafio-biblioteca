@@ -1,5 +1,6 @@
 import React from "react";
 import { LivroFormProps } from "../../types/LivroFormProps";
+import { Button, StyledLabel } from "./styled";
 
 const LivroForm: React.FC<LivroFormProps> = ({ livro, onChange, onSubmit }) => {
   const handleAnoPublicacaoChange = (
@@ -14,7 +15,7 @@ const LivroForm: React.FC<LivroFormProps> = ({ livro, onChange, onSubmit }) => {
   return (
     <form onSubmit={onSubmit}>
       <div>
-        <label htmlFor="titulo">Título:</label>
+        <StyledLabel htmlFor="titulo">Título:</StyledLabel>
         <input
           type="text"
           id="titulo"
@@ -25,7 +26,7 @@ const LivroForm: React.FC<LivroFormProps> = ({ livro, onChange, onSubmit }) => {
         />
       </div>
       <div>
-        <label htmlFor="autor">Autor:</label>
+        <StyledLabel htmlFor="autor">Autor:</StyledLabel>
         <input
           type="text"
           id="autor"
@@ -36,7 +37,7 @@ const LivroForm: React.FC<LivroFormProps> = ({ livro, onChange, onSubmit }) => {
         />
       </div>
       <div>
-        <label htmlFor="anoPublicacao">Ano de Publicação:</label>
+        <StyledLabel htmlFor="anoPublicacao">Ano de Publicação:</StyledLabel>
         <input
           type="text"
           id="anoPublicacao"
@@ -47,7 +48,7 @@ const LivroForm: React.FC<LivroFormProps> = ({ livro, onChange, onSubmit }) => {
         />
       </div>
       <div>
-        <label htmlFor="dataCadastro">Data de Cadastro:</label>
+        <StyledLabel htmlFor="dataCadastro">Data de Cadastro:</StyledLabel>
         <input
           type="text"
           id="dataCadastro"
@@ -58,7 +59,7 @@ const LivroForm: React.FC<LivroFormProps> = ({ livro, onChange, onSubmit }) => {
         />
       </div>
       <div>
-        <label htmlFor="genero">Gênero:</label>
+        <StyledLabel htmlFor="genero">Gênero:</StyledLabel>
         <input
           type="text"
           id="genero"
@@ -69,7 +70,7 @@ const LivroForm: React.FC<LivroFormProps> = ({ livro, onChange, onSubmit }) => {
         />
       </div>
       <div>
-        <label htmlFor="descricao">Descrição:</label>
+        <StyledLabel htmlFor="descricao">Descrição:</StyledLabel>
         <input
           type="text"
           id="descricao"
@@ -80,7 +81,7 @@ const LivroForm: React.FC<LivroFormProps> = ({ livro, onChange, onSubmit }) => {
         />
       </div>
       <div>
-        <button type="submit">Adicionar Livro</button>
+        <Button type="submit">Adicionar Livro</Button>
       </div>
     </form>
   );
