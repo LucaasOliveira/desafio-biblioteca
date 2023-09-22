@@ -1,5 +1,5 @@
 import React from "react";
-import GerenciadorDeLivros from "./components/GereciadorDeLivros";
+import GerenciadorDeLivros from "./components/GerenciadorDeLivros/GereciadorDeLivros";
 
 const App: React.FC = () => {
   return (
