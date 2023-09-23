@@ -1,46 +1,50 @@
-# Getting Started with Create React App
+**Desafio de trabalho em dupla proposto pela Growdev**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## História: A Biblioteca Encantada
 
-## Available Scripts
+Em uma pequena cidade chamada "Livrópolis", existe uma biblioteca mágica onde os livros ganham vida à noite. Cada livro tem sua própria personalidade, histórias e desejos. A bibliotecária, Dona Clara, precisa de um sistema para gerenciar esses livros especiais e garantir que eles estejam sempre felizes e satisfeitos.
 
-In the project directory, you can run:
+## Seu Desafio:
 
-### `npm start`
+**Você foi contratado para desenvolver um aplicativo React que ajude Dona Clara a gerenciar sua coleção de livros mágicos. O aplicativo deve permitir que ela:**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. Adicione novos livros à coleção.
+2. Edite informações de livros existentes.
+3. Exclua livros que não estão mais na biblioteca.
+4. Visualize todos os livros em sua coleção.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Requisitos:
 
-### `npm test`
+**Adicionar Livro:**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+● Campos: Id, Título, Autor, Ano de Publicação, Data de cadastro, Gênero e uma breve Descrição.
 
-### `npm run build`
+● Todos os campos são obrigatórios.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+● Deve haver uma validação para garantir que o ano de publicação não seja no futuro. Editar Livro:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+● Os mesmos campos que o formulário de adição. Não deve ser possível editar data de cadastro e o Id
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**Excluir Livro:**
 
-### `npm run eject`
+● Deve haver uma confirmação antes de excluir um livro para garantir que Dona Clara não exclua um livro por engano..
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+**Visualizar Livros:**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+● Deve haver uma lista ou grade mostrando todos os livros.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+● Cada livro deve mostrar o Título, Autor e Ano de Publicação.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+● Deve haver uma opção para ver mais detalhes, que mostrará todas as informações do livro.
 
-## Learn More
+## Bônus:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**Estilização de Livropolis:**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+● Adicione estilos que reflitam a mágica e o encanto de Livropolis. Use cores suaves, fontes elegantes e ícones relacionados a livros.
+
+● Considere usar bibliotecas como styled-components para estilização.
+
+**Funcionalidade de Pesquisa:**
+
+● Implemente uma funcionalidade de pesquisa para ajudar Dona Clara a encontrar um livro específico por título ou autor.
