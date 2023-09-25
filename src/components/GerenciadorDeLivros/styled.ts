@@ -8,4 +8,5 @@ export const StyledGerenciadorDeLivros = styled.div`
   width: 80%;
   margin: 0 auto;
   padding-top: 20px;
+  color: white;
 `;

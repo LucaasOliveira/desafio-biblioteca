@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import LivroForm from '../LivroForm/LivroForm';
-import ListaLivros from '../ListaLivros/ListaLivros';
-import EditarLivroModal from '../EditarLivroModal/EditarLivroModal';
-import ExcluirLivroModal from '../ExcluirLivroModal/ExcluirLivroModal';
-import { Livro } from '../../types/Livro';
-import { StyledGerenciadorDeLivros } from './styled';
+import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+import LivroForm from "../LivroForm/LivroForm";
+import ListaLivros from "../ListaLivros/ListaLivros";
+import EditarLivroModal from "../EditarLivroModal/EditarLivroModal";
+import ExcluirLivroModal from "../ExcluirLivroModal/ExcluirLivroModal";
+import { Livro } from "../../types/Livro";
+import { StyledGerenciadorDeLivros } from "./styled";
+import { Divider } from "@mui/material";
 
 const GerenciadorDeLivros: React.FC = () => {
   const [livro, setLivro] = useState<Livro>({
     id: uuidv4(),
-    titulo: '',
-    autor: '',
+    titulo: "",
+    autor: "",
     anoPublicacao: 0,
     dataCadastro: new Date().toLocaleDateString(),
-    genero: '',
-    descricao: '',
+    genero: "",
+    descricao: "",
   });
 
   const [livros, setLivros] = useState<Livro[]>([]);
@@ -25,7 +26,9 @@ const GerenciadorDeLivros: React.FC = () => {
   const [modalExclusaoIsOpen, setModalExclusaoIsOpen] = useState(false);
 
   useEffect(() => {
-    const livrosArmazenados = JSON.parse(localStorage.getItem('livros') || '[]');
+    const livrosArmazenados = JSON.parse(
+      localStorage.getItem("livros") || "[]"
+    );
     setLivros(livrosArmazenados);
   }, []);
 
@@ -39,12 +42,12 @@ const GerenciadorDeLivros: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const anoAtual = new Date().getFullYear();
-    
+
     if (livro.anoPublicacao > anoAtual) {
-      alert('O ano de publicação não pode ser no futuro.');
+      alert("O ano de publicação não pode ser no futuro.");
       return;
     }
-    
+
     const livrosAtualizados = [...livros, livro];
     salvarELimparFormulario(livrosAtualizados);
   };
@@ -56,17 +59,17 @@ const GerenciadorDeLivros: React.FC = () => {
       const anoAtual = new Date().getFullYear();
       const anoPublicacao = livroEmEdicao.anoPublicacao;
       const anoCadastro = parseInt(
-        livroEmEdicao.dataCadastro.split('/')[2],
+        livroEmEdicao.dataCadastro.split("/")[2],
         10
       );
 
       if (anoPublicacao > anoAtual) {
-        alert('O ano de publicação não pode ser no futuro.');
+        alert("O ano de publicação não pode ser no futuro.");
         return;
       }
 
       if (anoPublicacao > anoCadastro) {
-        alert('O ano de publicação não pode ser maior que o ano de cadastro.');
+        alert("O ano de publicação não pode ser maior que o ano de cadastro.");
         return;
       }
     }
@@ -81,7 +84,7 @@ const GerenciadorDeLivros: React.FC = () => {
 
   const salvarELimparFormulario = (livrosAtualizados: Livro[]) => {
     setLivros(livrosAtualizados);
-    localStorage.setItem('livros', JSON.stringify(livrosAtualizados));
+    localStorage.setItem("livros", JSON.stringify(livrosAtualizados));
     limparFormulario();
   };
 
@@ -111,12 +114,12 @@ const GerenciadorDeLivros: React.FC = () => {
   const limparFormulario = () => {
     setLivro({
       id: uuidv4(),
-      titulo: '',
-      autor: '',
+      titulo: "",
+      autor: "",
       anoPublicacao: 0,
       dataCadastro: new Date().toLocaleDateString(),
-      genero: '',
-      descricao: '',
+      genero: "",
+      descricao: "",
     });
   };
 
@@ -137,8 +140,12 @@ const GerenciadorDeLivros: React.FC = () => {
 
   return (
     <StyledGerenciadorDeLivros>
-      <h2>Gerenciador de Livros</h2>
-      <LivroForm livro={livro} onChange={handleChange} onSubmit={handleSubmit} />
+      <h1>Gerenciador de Livros</h1>
+      <LivroForm
+        livro={livro}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+      />
       {livros.length > 0 && (
         <ListaLivros
           livros={livros}
@@ -146,6 +153,9 @@ const GerenciadorDeLivros: React.FC = () => {
           onDelete={confirmarExclusao}
         />
       )}
+
+      <Divider variant="inset" />
+
       <EditarLivroModal
         isOpen={modalIsOpen}
         onClose={fecharModalEdicao}
