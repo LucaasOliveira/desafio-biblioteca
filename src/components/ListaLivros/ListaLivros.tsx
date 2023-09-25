@@ -6,6 +6,7 @@ import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateIcon from "@mui/icons-material/Create";
 import Paper from "@mui/material/Paper";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const ListaLivros: React.FC<ListaLivrosProps> = ({
   livros,
@@ -38,7 +39,7 @@ const ListaLivros: React.FC<ListaLivrosProps> = ({
           <Paper className="card" key={index}>
             <div className="content">
               <h3>Título:</h3>
-              <h4> {livro.titulo}</h4>
+              <h4 id="titulo"> {livro.titulo}</h4>
               <h3>Autor:</h3>
               <h5>{livro.autor}</h5>
               <h3>Ano de publicação:</h3>
@@ -47,6 +48,15 @@ const ListaLivros: React.FC<ListaLivrosProps> = ({
               <h5>{livro.genero}</h5>
               <h3>Descrição:</h3>
               <h5>{livro.descricao}</h5>
+
+              <IconButton
+                onClick={() => onDelete(livro)}
+                edge="end"
+                aria-label="mostrarMais"
+              >
+                <AddCircleIcon />
+              </IconButton>
+
               <IconButton
                 onClick={() => onDelete(livro)}
                 edge="end"
@@ -54,6 +64,7 @@ const ListaLivros: React.FC<ListaLivrosProps> = ({
               >
                 <DeleteIcon />
               </IconButton>
+
               <IconButton
                 onClick={() => onEdit(livro)}
                 edge="end"
