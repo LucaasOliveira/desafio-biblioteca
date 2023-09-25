@@ -2,11 +2,17 @@ import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import LivroForm from "../LivroForm/LivroForm";
 import ListaLivros from "../ListaLivros/ListaLivros";
-import EditarLivroModal from "../EditarLivroModal/EditarLivroModal";
-import ExcluirLivroModal from "../ExcluirLivroModal/ExcluirLivroModal";
 import { Livro } from "../../types/Livro";
-import { StyledGerenciadorDeLivros } from "./styled";
-import { Divider } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
+} from "@mui/material";
+import LivroFormEdicao from "../LivroFormEdicao/LivroFormEdicao";
+import { LivroFormEdicaoProps } from "../../types/LivroFormEdicaoProps";
 
 const GerenciadorDeLivros: React.FC = () => {
   const [livro, setLivro] = useState<Livro>({
@@ -16,14 +22,13 @@ const GerenciadorDeLivros: React.FC = () => {
     anoPublicacao: 0,
     dataCadastro: new Date().toLocaleDateString(),
     genero: "",
-    descricao: "",
+    descricao: ""
   });
 
   const [livros, setLivros] = useState<Livro[]>([]);
   const [livroEmEdicao, setLivroEmEdicao] = useState<Livro | null>(null);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [livroParaExcluir, setLivroParaExcluir] = useState<Livro | null>(null);
-  const [modalExclusaoIsOpen, setModalExclusaoIsOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [isLivroFormEdicaoOpen, setIsLivroFormEdicaoOpen] = useState(false);
 
   useEffect(() => {
     const livrosArmazenados = JSON.parse(
@@ -36,50 +41,32 @@ const GerenciadorDeLivros: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setLivro((prevLivro) => ({ ...prevLivro, [name]: value }));
+    setLivro(prevLivro => ({
+      ...prevLivro,
+      [name]: value
+    }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     const anoAtual = new Date().getFullYear();
+    const anoCadastro = parseInt(livro.dataCadastro.split("/")[2]);
 
     if (livro.anoPublicacao > anoAtual) {
       alert("O ano de publicação não pode ser no futuro.");
       return;
     }
 
-    const livrosAtualizados = [...livros, livro];
-    salvarELimparFormulario(livrosAtualizados);
-  };
-
-  const handleEdit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (livroEmEdicao) {
-      const anoAtual = new Date().getFullYear();
-      const anoPublicacao = livroEmEdicao.anoPublicacao;
-      const anoCadastro = parseInt(
-        livroEmEdicao.dataCadastro.split("/")[2],
-        10
-      );
-
-      if (anoPublicacao > anoAtual) {
-        alert("O ano de publicação não pode ser no futuro.");
-        return;
-      }
-
-      if (anoPublicacao > anoCadastro) {
-        alert("O ano de publicação não pode ser maior que o ano de cadastro.");
-        return;
-      }
+    if (livro.anoPublicacao > anoCadastro) {
+      alert("O ano de publicação não pode ser maior que o ano de cadastro.");
+      return;
     }
 
-    const livrosAtualizados = livros.map((livroItem) =>
-      livroItem.id === livroEmEdicao?.id ? livroEmEdicao : livroItem
-    );
-
+    const livrosAtualizados = [...livros, livro];
     salvarELimparFormulario(livrosAtualizados);
-    fecharModalEdicao();
+
+    setLivroEmEdicao(null);
+    setEditDialogOpen(false);
+    setIsLivroFormEdicaoOpen(true);
   };
 
   const salvarELimparFormulario = (livrosAtualizados: Livro[]) => {
@@ -88,27 +75,13 @@ const GerenciadorDeLivros: React.FC = () => {
     limparFormulario();
   };
 
-  const abrirModalExclusao = () => {
-    setModalExclusaoIsOpen(true);
-  };
-
-  const fecharModalExclusao = () => {
-    setModalExclusaoIsOpen(false);
-    setLivroParaExcluir(null);
-  };
-
   const abrirModalEdicao = (livroItem: Livro | null) => {
     if (livroItem) {
       setLivroEmEdicao(livroItem);
+      setIsLivroFormEdicaoOpen(true);
     } else {
       setLivroEmEdicao(null);
     }
-    setModalIsOpen(true);
-  };
-
-  const fecharModalEdicao = () => {
-    setModalIsOpen(false);
-    setLivroEmEdicao(null);
   };
 
   const limparFormulario = () => {
@@ -119,57 +92,111 @@ const GerenciadorDeLivros: React.FC = () => {
       anoPublicacao: 0,
       dataCadastro: new Date().toLocaleDateString(),
       genero: "",
-      descricao: "",
+      descricao: ""
     });
   };
 
   const confirmarExclusao = (livroItem: Livro) => {
-    setLivroParaExcluir(livroItem);
-    abrirModalExclusao();
+    setDeleteConfirmation({
+      open: true,
+      livro: livroItem
+    });
   };
 
-  const handleExcluir = () => {
-    if (livroParaExcluir) {
+  const excluirLivro = () => {
+    if (deleteConfirmation.livro) {
+      const livroExcluir = deleteConfirmation.livro;
       const livrosAtualizados = livros.filter(
-        (livroItem) => livroItem.id !== livroParaExcluir.id
+        livro => livro.id !== livroExcluir.id
       );
       salvarELimparFormulario(livrosAtualizados);
-      fecharModalExclusao();
+      setDeleteConfirmation({
+        open: false,
+        livro: null
+      });
     }
   };
 
+  const handleUpdateLivro = () => {
+    if (livroEmEdicao) {
+      const livroIndex = livros.findIndex(
+        livro => livro.id === livroEmEdicao.id
+      );
+
+      if (livroIndex !== -1) {
+        const livrosAtualizados = [...livros];
+        livrosAtualizados[livroIndex] = livroEmEdicao;
+
+        salvarELimparFormulario(livrosAtualizados);
+        setEditDialogOpen(false);
+        setIsLivroFormEdicaoOpen(false);
+      }
+    }
+  };
+
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{
+    open: boolean;
+    livro: Livro | null;
+  }>({
+    open: false,
+    livro: null
+  });
+
   return (
-    <StyledGerenciadorDeLivros>
-      <h1>Gerenciador de Livros</h1>
+    <>
+      <h2>Gerenciador de Livros</h2>
       <LivroForm
         livro={livro}
         onChange={handleChange}
         onSubmit={handleSubmit}
       />
-      {livros.length > 0 && (
+      {livros.length > 0 &&
         <ListaLivros
           livros={livros}
           onEdit={abrirModalEdicao}
           onDelete={confirmarExclusao}
-        />
-      )}
-
-      <Divider variant="inset" />
-
-      <EditarLivroModal
-        isOpen={modalIsOpen}
-        onClose={fecharModalEdicao}
-        livroEmEdicao={livroEmEdicao}
-        onEditChange={handleChange}
-        onEditSubmit={handleEdit}
-      />
-      <ExcluirLivroModal
-        isOpen={modalExclusaoIsOpen}
-        onClose={fecharModalExclusao}
-        livroParaExcluir={livroParaExcluir}
-        onExcluirConfirm={handleExcluir}
-      />
-    </StyledGerenciadorDeLivros>
+        />}
+      <Dialog
+        open={deleteConfirmation.open}
+        onClose={() =>
+          setDeleteConfirmation({
+            open: false,
+            livro: null
+          })}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Confirmar exclusão</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Tem certeza de que deseja excluir este livro?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() =>
+              setDeleteConfirmation({
+                open: false,
+                livro: null
+              })}
+            color="primary"
+          >
+            Cancelar
+          </Button>
+          <Button onClick={excluirLivro} color="primary" autoFocus>
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {isLivroFormEdicaoOpen &&
+        livroEmEdicao &&
+        <LivroFormEdicao
+          livro={livroEmEdicao}
+          onChange={handleChange}
+          onCancel={() => setIsLivroFormEdicaoOpen(false)}
+          onSubmit={handleUpdateLivro}
+        />}
+    </>
   );
 };
 

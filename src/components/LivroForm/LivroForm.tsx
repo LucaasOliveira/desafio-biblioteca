@@ -1,110 +1,143 @@
-import React from "react";
-import { LivroFormProps } from "../../types/LivroFormProps";
-import { Grid, TextField } from "@mui/material";
-import Button from "@mui/material/Button";
-import { StyledInput, StyledLabel } from "./styled";
+
+import React, { useState } from 'react';
+import { TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle,DialogContentText } from '@mui/material';
+import { LivroFormProps } from '../../types/LivroFormProps';
 
 const LivroForm: React.FC<LivroFormProps> = ({ livro, onChange, onSubmit }) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
-  const handleAnoPublicacaoChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const handleAnoPublicacaoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (!isNaN(Number(value)) && Number(value) >= 0) {
       onChange(e);
     }
   };
 
-  return (
-    <form onSubmit={onSubmit}>
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <div>
-            <StyledLabel htmlFor="titulo">Título:</StyledLabel>
-            <StyledInput
-              type="text"
-              id="titulo"
-              name="titulo"
-              value={livro.titulo}
-              onChange={onChange}
-              required
-            />
-          </div>
-          <div>
-            <StyledLabel htmlFor="autor">Autor:</StyledLabel>
-            <StyledInput
-              type="text"
-              id="autor"
-              name="autor"
-              value={livro.autor}
-              onChange={onChange}
-              required
-            />
-          </div>
-          <div>
-            <StyledLabel htmlFor="anoPublicacao">
-              Ano de Publicação:
-            </StyledLabel>
-            <StyledInput
-              type="text"
-              id="anoPublicacao"
-              name="anoPublicacao"
-              value={livro.anoPublicacao}
-              onChange={handleAnoPublicacaoChange}
-              required
-            />
-          </div>
-        </Grid>
-        <Grid item xs={6}>
-          <div>
-            <StyledLabel htmlFor="dataCadastro">Data de Cadastro:</StyledLabel>
-            <StyledInput
-              type="text"
-              id="dataCadastro"
-              name="dataCadastro"
-              value={livro.dataCadastro}
-              onChange={onChange}
-              required
-            />
-          </div>
-          <div>
-            <StyledLabel htmlFor="genero">Gênero:</StyledLabel>
-            <StyledInput
-              type="text"
-              id="genero"
-              name="genero"
-              value={livro.genero}
-              onChange={onChange}
-              required
-            />
-          </div>
-          <div>
-            <StyledLabel htmlFor="descricao">Descrição:</StyledLabel>
-            <StyledInput
-              type="text"
-              id="descricao"
-              name="descricao"
-              value={livro.descricao}
-              onChange={onChange}
-              required
-            />
-          </div>
-        </Grid>
-      </Grid>
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-      <div>
-        <Button
-          variant="contained"
-          type="submit"
-          sx={{
-            margin: "20px",
-          }}
-        >
-          Adicionar Livro
-        </Button>
-      </div>
-    </form>
+  const handleClose = () => {
+    setOpen(false);
+    setErrors({});
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    const anoAtual = new Date().getFullYear();
+
+    if (livro.anoPublicacao > anoAtual) {
+      setErrors({ anoPublicacao: 'O ano de publicação não pode ser no futuro.' });
+      return;
+    }
+
+    if (livro.anoPublicacao > parseInt(livro.dataCadastro.split("/")[2])) {
+      setErrors({ anoPublicacao: 'O ano de publicação não pode ser maior que o ano de cadastro.' });
+      return;
+    }
+
+    onSubmit(e);
+    setOpen(false);
+    setErrors({});
+  };
+
+  return (
+    <>
+      <Button
+        className="buttonCadastro"
+        variant="outlined"
+        onClick={handleClickOpen}
+      >
+        Cadastre um livro
+      </Button>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Biblioteca Mágica</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Cadastro de livro</DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            fullWidth
+            label="Titulo"
+            variant="outlined"
+            type="text"
+            id="titulo"
+            name="titulo"
+            value={livro.titulo}
+            onChange={onChange}
+            required
+          />
+          <TextField
+            margin="dense"
+            id="autor"
+            label="Autor"
+            fullWidth
+            variant="outlined"
+            type="text"
+            name="autor"
+            value={livro.autor}
+            onChange={onChange}
+            required
+          />
+          <TextField
+            margin="dense"
+            label="Gênero"
+            fullWidth
+            variant="outlined"
+            required
+            type="text"
+            id="genero"
+            name="genero"
+            value={livro.genero}
+            onChange={onChange}
+          />
+          <TextField
+            margin="dense"
+            label="Ano de publicação"
+            fullWidth
+            variant="outlined"
+            name="anoPublicacao"
+            type="number"
+            id="anoPublicacao"
+            value={livro.anoPublicacao}
+            onChange={handleAnoPublicacaoChange}
+            required
+            error={!!errors.anoPublicacao}
+            helperText={errors.anoPublicacao}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Data Cadastro"
+            fullWidth
+            type="text"
+            id="dataCadastro"
+            name="dataCadastro"
+            value={livro.dataCadastro}
+            onChange={onChange}
+            required
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Descrição"
+            fullWidth
+            variant="outlined"
+            type="text"
+            id="descricao"
+            name="descricao"
+            value={livro.descricao}
+            onChange={onChange}
+            required
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancelar</Button>
+          <Button onClick={handleSubmit}>Salvar</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 

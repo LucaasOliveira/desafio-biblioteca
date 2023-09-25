@@ -1,83 +1,150 @@
-import React from "react";
-import Grid from "@mui/material/Grid";
-import { ListaLivrosProps } from "../../types/ListaLivrosProps";
-import "./StyledCard.css";
-import { IconButton } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import CreateIcon from "@mui/icons-material/Create";
-import Paper from "@mui/material/Paper";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
+} from "@mui/material";
+import { Livro } from "../../types/Livro";
+import LivroFormEdicao from "../LivroFormEdicao/LivroFormEdicao";
+
+interface ListaLivrosProps {
+  livros: Livro[];
+  onEdit: (livro: Livro) => void;
+  onDelete: (livro: Livro) => void;
+}
 
 const ListaLivros: React.FC<ListaLivrosProps> = ({
   livros,
   onEdit,
-  onDelete,
+  onDelete
 }) => {
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{
+    open: boolean;
+    livro: Livro | null;
+  }>({
+    open: false,
+    livro: null
+  });
+
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [livroEdit, setLivroEdit] = useState<Livro | null>(null);
+
+  const handleDelete = (livro: Livro) => {
+    setDeleteConfirmation({ open: true, livro });
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmation({ open: false, livro: null });
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteConfirmation.livro) {
+      onDelete(deleteConfirmation.livro);
+      setDeleteConfirmation({ open: false, livro: null });
+    }
+  };
+
+  const handleEdit = (livro: Livro) => {
+    setLivroEdit(livro);
+    setEditDialogOpen(true);
+  };
+
+  const handleEditDialogClose = () => {
+    setLivroEdit(null);
+    setEditDialogOpen(false);
+  };
+
+  const handleUpdateLivro = (livroAtualizado: Livro) => {
+    if (livroEdit) {
+      const livroIndex = livros.findIndex(livro => livro.id === livroEdit.id);
+
+      if (livroIndex !== -1) {
+        const livrosAtualizados = [...livros];
+        livrosAtualizados[livroIndex] = livroAtualizado;
+
+        onEdit(livroAtualizado);
+
+        handleEditDialogClose();
+      }
+    }
+  };
+
   return (
-    // <div>
-    //   <h2>Livros Cadastrados</h2>
-    //   <ul>
-    //     {livros.map((livro, index) => (
-    //       <li key={index}>
-    //         <strong>Título:</strong> {livro.titulo} <br />
-    //         <strong>Autor:</strong> {livro.autor}
-    //         <br />
-    //         <strong>Ano de Publicação:</strong> {livro.anoPublicacao} <br />
-    //         <strong>Data de Cadastro:</strong> {livro.dataCadastro} <br />
-    //         <strong>Gênero:</strong> {livro.genero} <br />
-    //         <strong>Descrição:</strong> {livro.descricao} <br />
-    //         <button onClick={() => onEdit(livro)}>Editar</button>
-    //         <button onClick={() => onDelete(livro)}>Excluir</button>
-    //       </li>
-    //     ))}
-    //   </ul>
-    // </div>
+    <div>
+      {livros.map(livro =>
+        <Card key={livro.id}>
+          <CardContent>
+            <h3>
+              {livro.titulo}
+            </h3>
+            <p>
+              {livro.autor}
+            </p>
+            <p>
+              {livro.anoPublicacao}
+            </p>
+          </CardContent>
+          <CardActions>
+            <Button onClick={() => handleEdit(livro)}>Editar</Button>
+            <Button onClick={() => handleDelete(livro)}>Excluir</Button>
+          </CardActions>
+        </Card>
+      )}
+      <Dialog
+        open={deleteConfirmation.open}
+        onClose={handleCancelDelete}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Confirmar exclusão</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Tem certeza de que deseja excluir este livro?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleConfirmDelete} color="primary" autoFocus>
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-    <Grid item xs={12}>
-      <Grid xs={12} className="container">
-        {livros.map((livro, index) => (
-          <Paper className="card" key={index}>
-            <div className="content">
-              <h3>Título:</h3>
-              <h4 id="titulo"> {livro.titulo}</h4>
-              <h3>Autor:</h3>
-              <h5>{livro.autor}</h5>
-              <h3>Ano de publicação:</h3>
-              <h5>{livro.anoPublicacao}</h5>
-              <h3>Gênero:</h3>
-              <h5>{livro.genero}</h5>
-              <h3>Descrição:</h3>
-              <h5>{livro.descricao}</h5>
-
-              <IconButton
-                onClick={() => onDelete(livro)}
-                edge="end"
-                aria-label="mostrarMais"
-              >
-                <AddCircleIcon />
-              </IconButton>
-
-              <IconButton
-                onClick={() => onDelete(livro)}
-                edge="end"
-                aria-label="delete"
-              >
-                <DeleteIcon />
-              </IconButton>
-
-              <IconButton
-                onClick={() => onEdit(livro)}
-                edge="end"
-                aria-label="edit"
-                sx={{ paddingRight: "20px" }}
-              >
-                <CreateIcon />
-              </IconButton>
-            </div>
-          </Paper>
-        ))}
-      </Grid>
-    </Grid>
+      <Dialog
+        open={editDialogOpen}
+        onClose={handleEditDialogClose}
+        aria-labelledby="edit-dialog-title"
+      >
+        <DialogTitle id="edit-dialog-title">Editar Livro</DialogTitle>
+        <DialogContent>
+          {livroEdit &&
+            <LivroFormEdicao
+              livro={livroEdit}
+              onChange={e => {
+                const { name, value } = e.target;
+                setLivroEdit(prevLivro => {
+                  if (prevLivro) {
+                    return { ...prevLivro, [name]: value };
+                  }
+                  return null;
+                });
+              }}
+              onCancel={handleEditDialogClose}
+              onSubmit={() => {
+                handleUpdateLivro(livroEdit);
+              }}
+            />}
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };
 
