@@ -1,4 +1,9 @@
+* {
+  font-family: 'Raleway', sans-serif;
+}
+
 body {
   background-image: url("./../public/images/biblioteca.png");
   background-repeat: no-repeat;
+  margin: 0;
 }
