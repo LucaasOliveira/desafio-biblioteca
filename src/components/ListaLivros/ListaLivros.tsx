@@ -8,7 +8,8 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  Grid
 } from "@mui/material";
 import { Livro } from "../../types/Livro";
 import LivroFormEdicao from "../LivroFormEdicao/LivroFormEdicao";
@@ -76,26 +77,31 @@ const ListaLivros: React.FC<ListaLivrosProps> = ({
   };
 
   return (
-    <div>
-      {livros.map(livro =>
-        <Card key={livro.id}>
-          <CardContent>
-            <h3>
-              {livro.titulo}
-            </h3>
-            <p>
-              {livro.autor}
-            </p>
-            <p>
-              {livro.anoPublicacao}
-            </p>
-          </CardContent>
-          <CardActions>
-            <Button onClick={() => handleEdit(livro)}>Editar</Button>
-            <Button onClick={() => handleDelete(livro)}>Excluir</Button>
-          </CardActions>
-        </Card>
-      )}
+    <React.Fragment>
+      <Grid container spacing={1} justifyContent="center">
+        {livros.map(livro =>
+          <Grid item xs={12} sm={6} md={4} lg={3} key={livro.id}>
+            <Card sx={{ minWidth: 275, maxWidth: 375, margin: 5 }}>
+              <CardContent>
+                <h3>
+                  {livro.titulo}
+                </h3>
+                <p>
+                  {livro.autor}
+                </p>
+                <p>
+                  {livro.anoPublicacao}
+                </p>
+              </CardContent>
+              <CardActions>
+                <Button onClick={() => handleEdit(livro)}>Editar</Button>
+                <Button onClick={() => handleDelete(livro)}>Excluir</Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        )}
+      </Grid>
+
       <Dialog
         open={deleteConfirmation.open}
         onClose={handleCancelDelete}
@@ -144,7 +150,7 @@ const ListaLivros: React.FC<ListaLivrosProps> = ({
             />}
         </DialogContent>
       </Dialog>
-    </div>
+    </React.Fragment>
   );
 };
 

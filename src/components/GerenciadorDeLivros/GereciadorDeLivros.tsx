@@ -9,10 +9,21 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  Grid,
+  ListItem,
+  TextField,
+  Typography
 } from "@mui/material";
 import LivroFormEdicao from "../LivroFormEdicao/LivroFormEdicao";
 import { LivroFormEdicaoProps } from "../../types/LivroFormEdicaoProps";
+import styled from "styled-components";
+
+const Title = styled.h3`
+  margin: 30px;
+  color: #ffffff;
+
+`;
 
 const GerenciadorDeLivros: React.FC = () => {
   const [livro, setLivro] = useState<Livro>({
@@ -144,7 +155,14 @@ const GerenciadorDeLivros: React.FC = () => {
 
   return (
     <>
-      <h2>Gerenciador de Livros</h2>
+    <Grid container>
+    <Grid item xs={12} style={{ textAlign: 'center' }}>
+      <Title>
+      <Typography variant="h3">Gerenciador de Livros</Typography>
+      </Title>
+    </Grid>
+
+    <Grid item xs={12}>
       <LivroForm
         livro={livro}
         onChange={handleChange}
@@ -196,6 +214,8 @@ const GerenciadorDeLivros: React.FC = () => {
           onCancel={() => setIsLivroFormEdicaoOpen(false)}
           onSubmit={handleUpdateLivro}
         />}
+      </Grid>
+      </Grid>
     </>
   );
 };
