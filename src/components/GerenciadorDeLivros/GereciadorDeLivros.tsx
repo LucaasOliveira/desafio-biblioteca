@@ -11,12 +11,9 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
-  ListItem,
-  TextField,
   Typography
 } from "@mui/material";
 import LivroFormEdicao from "../LivroFormEdicao/LivroFormEdicao";
-import { LivroFormEdicaoProps } from "../../types/LivroFormEdicaoProps";
 import styled from "styled-components";
 
 const Title = styled.h3`

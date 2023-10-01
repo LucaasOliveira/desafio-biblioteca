@@ -9,45 +9,52 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Grid
+  Grid,
+  Collapse,
+  Typography
 } from "@mui/material";
 import { Livro } from "../../types/Livro";
 import LivroFormEdicao from "../LivroFormEdicao/LivroFormEdicao";
-
-interface ListaLivrosProps {
-  livros: Livro[];
-  onEdit: (livro: Livro) => void;
-  onDelete: (livro: Livro) => void;
-}
+import IconButton from "@mui/material/IconButton";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ListaLivrosProps } from "../../types/ListaLivrosProps";
 
 const ListaLivros: React.FC<ListaLivrosProps> = ({
   livros,
   onEdit,
   onDelete
 }) => {
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   const [deleteConfirmation, setDeleteConfirmation] = useState<{
-    open: boolean;
     livro: Livro | null;
   }>({
-    open: false,
     livro: null
   });
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [livroEdit, setLivroEdit] = useState<Livro | null>(null);
+  const [expanded, setExpanded] = React.useState<string | null>(null);
+
+  const handleExpandClick = (id: string) => {
+    setExpanded(expanded === id ? null : id);
+  };
 
   const handleDelete = (livro: Livro) => {
-    setDeleteConfirmation({ open: true, livro });
+    setDeleteConfirmation({ livro });
+    setDeleteDialogOpen(true);
   };
 
   const handleCancelDelete = () => {
-    setDeleteConfirmation({ open: false, livro: null });
+    setDeleteConfirmation({ livro: null });
+    setDeleteDialogOpen(false);
   };
 
   const handleConfirmDelete = () => {
     if (deleteConfirmation.livro) {
       onDelete(deleteConfirmation.livro);
-      setDeleteConfirmation({ open: false, livro: null });
+      setDeleteConfirmation({ livro: null });
+      setDeleteDialogOpen(false);
     }
   };
 
@@ -69,7 +76,9 @@ const ListaLivros: React.FC<ListaLivrosProps> = ({
         const livrosAtualizados = [...livros];
         livrosAtualizados[livroIndex] = livroAtualizado;
 
-        onEdit(livroAtualizado);
+        if (editDialogOpen) {
+          onEdit(livroAtualizado);
+        }
 
         handleEditDialogClose();
       }
@@ -81,21 +90,47 @@ const ListaLivros: React.FC<ListaLivrosProps> = ({
       <Grid container spacing={1} justifyContent="center">
         {livros.map(livro =>
           <Grid item xs={12} sm={6} md={4} lg={3} key={livro.id}>
-            <Card sx={{ minWidth: 275, maxWidth: 375, margin: 5 }}>
+            <Card
+              sx={{
+                minWidth: 275,
+                maxWidth: 375,
+                margin: 2
+              }}
+            >
               <CardContent>
-                <h3>
+                <Typography variant="h5">
                   {livro.titulo}
-                </h3>
-                <p>
+                </Typography>
+                <Typography variant="body1">
                   {livro.autor}
-                </p>
-                <p>
+                </Typography>
+                <Typography variant="body1">
                   {livro.anoPublicacao}
-                </p>
+                </Typography>
+                <Collapse
+                  in={expanded === livro.id}
+                  timeout="auto"
+                  unmountOnExit
+                >
+                  <Typography variant="body1">
+                    {livro.genero}
+                  </Typography>
+                  <Typography variant="body1">
+                    {livro.descricao}
+                  </Typography>
+                </Collapse>
               </CardContent>
-              <CardActions>
+              <CardActions disableSpacing>
                 <Button onClick={() => handleEdit(livro)}>Editar</Button>
                 <Button onClick={() => handleDelete(livro)}>Excluir</Button>
+                <IconButton
+                  onClick={() => handleExpandClick(livro.id)}
+                  aria-expanded={expanded === livro.id}
+                  aria-label="show more"
+                  style={{ marginLeft: "auto" }}
+                >
+                  <ExpandMoreIcon />
+                </IconButton>
               </CardActions>
             </Card>
           </Grid>
@@ -103,7 +138,7 @@ const ListaLivros: React.FC<ListaLivrosProps> = ({
       </Grid>
 
       <Dialog
-        open={deleteConfirmation.open}
+        open={deleteDialogOpen}
         onClose={handleCancelDelete}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
